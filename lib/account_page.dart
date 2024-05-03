@@ -114,6 +114,12 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
+  Future<void> _skip() async {
+    if (mounted) {
+      Navigator.of(context).pushReplacementNamed('/project');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -148,6 +154,14 @@ class _AccountPageState extends State<AccountPage> {
                 ElevatedButton(
                   onPressed: _loading ? null : _updateProfile,
                   child: Text(_loading ? 'Saving...' : 'Update'),
+                ),
+                const SizedBox(height: 18),
+                ElevatedButton(
+                  style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                          Color.fromARGB(255, 41, 65, 204))),
+                  onPressed: _skip,
+                  child: const Text('Skip'),
                 ),
                 const SizedBox(height: 18),
                 TextButton(onPressed: _signOut, child: const Text('Sign Out')),

@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         '/': (_) => const SplashPage(),
         '/login': (_) => const LoginPage(),
         '/account': (_) => const AccountPage(),
-        '/project': (_) => ProjectManagementPage()
+        '/project': (_) => const ProjectManagementPage()
       },
     );
   }
