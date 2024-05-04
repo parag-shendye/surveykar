@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'main.dart';
+import 'part_page.dart';
 import 'utils.dart';
 
 class Project {
+  final String? id;
   final String typeOfPolicy;
   final DateTime dateOfRegistration;
   final DateTime dateOfAccident;
@@ -11,7 +13,8 @@ class Project {
   final String? title;
 
   Project(
-      {required this.typeOfPolicy,
+      {this.id,
+      required this.typeOfPolicy,
       required this.dateOfRegistration,
       required this.dateOfAccident,
       required this.vehicleId,
@@ -123,6 +126,14 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
     }
   }
 
+  Future<void> _goToParts(String id) async {
+    if (mounted) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => PartPage(projectId: id),
+      ));
+    }
+  }
+
   Future<List<Project>> fetchProjects() async {
     final user = supabase.auth.currentUser;
     if (user == null) {
@@ -141,6 +152,7 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
     final List<Project> projects = [];
     for (final row in response) {
       final project = Project(
+        id: row['id'] as String,
         title: row['title'] as String?,
         typeOfPolicy: getKeyFromValue(
             policyTypeToNumberMap, row['type_of_policy_id'] as int)!,
@@ -163,9 +175,17 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Project Management'),
-      ),
+      appBar: AppBar(title: const Text('Project Management'), actions: <Widget>[
+        IconButton(
+          icon: const Icon(
+            Icons.account_circle,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed("/account");
+          },
+        )
+      ]),
       body: Column(
         children: [
           Expanded(
@@ -327,7 +347,7 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
                                   DataCell(IconButton(
                                     icon: const Icon(Icons.edit),
                                     onPressed: () {
-                                      debugPrint(project.toString());
+                                      _goToParts(project.id as String);
                                     },
                                   )),
                                 ]);

@@ -23,8 +23,9 @@ class _SplashPageState extends State<SplashPage> {
     }
 
     final session = supabase.auth.currentSession;
+
     if (session != null) {
-      Navigator.of(context).pushReplacementNamed('/account');
+      Navigator.of(context).pushReplacementNamed('/project');
     } else {
       Navigator.of(context).pushReplacementNamed('/login');
     }

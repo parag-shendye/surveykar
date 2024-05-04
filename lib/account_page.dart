@@ -135,7 +135,17 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: const Text('Profile'), actions: <Widget>[
+        IconButton(
+          icon: const Icon(
+            Icons.post_add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed("/project");
+          },
+        )
+      ]),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
@@ -156,14 +166,14 @@ class _AccountPageState extends State<AccountPage> {
                   child: Text(_loading ? 'Saving...' : 'Update'),
                 ),
                 const SizedBox(height: 18),
-                ElevatedButton(
-                  style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(
-                          Color.fromARGB(255, 41, 65, 204))),
-                  onPressed: _skip,
-                  child: const Text('Skip'),
-                ),
-                const SizedBox(height: 18),
+                // ElevatedButton(
+                //   style: const ButtonStyle(
+                //       backgroundColor: MaterialStatePropertyAll(
+                //           Color.fromARGB(255, 41, 65, 204))),
+                //   onPressed: _skip,
+                //   child: const Text('Skip'),
+                // ),
+                // const SizedBox(height: 18),
                 TextButton(onPressed: _signOut, child: const Text('Sign Out')),
               ],
             ),

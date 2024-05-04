@@ -4,6 +4,12 @@ final Map<String, int> policyTypeToNumberMap = {
   'C': 3,
   'D': 4,
 };
+final Map<String, int> MaterialTypeToNumberMap = {
+  'metal': 1,
+  'rubber': 2,
+  'fiber': 3,
+  'glass': 4,
+};
 
 String? getKeyFromValue(Map<String, int> map, int value) {
   for (var entry in map.entries) {
