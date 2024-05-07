@@ -4,7 +4,7 @@ final Map<String, int> policyTypeToNumberMap = {
   'C': 3,
   'D': 4,
 };
-final Map<String, int> MaterialTypeToNumberMap = {
+final Map<String, int> materialTypeToNumberMap = {
   'metal': 1,
   'rubber': 2,
   'fiber': 3,

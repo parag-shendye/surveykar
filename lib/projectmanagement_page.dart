@@ -41,6 +41,7 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
   String? selectedPolicy;
   DateTime? selectedDate;
   DateTime? dateOfRegistration;
+  String? projectId;
   var _loading = true;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -71,6 +72,22 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
     }
   }
 
+  Future<void> _editProject(String id) async {
+    var proj = await supabase.from('projects').select().eq('id', id);
+    var selectedProject = proj.toList()[0];
+    projectId = selectedProject['id'];
+    vehicleIdController.text = selectedProject['vehicle_id'];
+    titleController.text = selectedProject['title'];
+    setState(() {
+      selectedPolicy = getKeyFromValue(
+          policyTypeToNumberMap, selectedProject['type_of_policy_id']);
+      selectedDate = DateTime.parse(selectedProject["date_of_accident"]);
+      dateOfRegistration =
+          DateTime.parse(selectedProject["date_of_registration"]);
+    });
+    // print(selectedDate);
+  }
+
   Future<void> _updateProject() async {
     setState(() {
       _loading = true;
@@ -80,6 +97,7 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
     final policy_type = policyTypeToNumberMap[selectedPolicy];
     final user = supabase.auth.currentUser;
     final updates = {
+      'id': projectId,
       'user_id': user!.id,
       'vehicle_id': vehicleId,
       'type_of_policy_id': policy_type,
@@ -121,6 +139,7 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
       if (mounted) {
         setState(() {
           _loading = false;
+          _projectsFuture = fetchProjects();
         });
       }
     }
@@ -347,7 +366,7 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
                                   DataCell(IconButton(
                                     icon: const Icon(Icons.edit),
                                     onPressed: () {
-                                      _goToParts(project.id as String);
+                                      _editProject(project.id as String);
                                     },
                                   )),
                                 ]);
