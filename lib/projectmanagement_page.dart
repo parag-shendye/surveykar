@@ -51,10 +51,18 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != selectedDate) {
+    if (picked != null &&
+        picked != selectedDate &&
+        picked.difference(DateTime.now()) <= Duration.zero) {
       setState(() {
         selectedDate = picked;
       });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Selected date should not be in future",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+        backgroundColor: Color.fromARGB(141, 235, 80, 80),
+      ));
     }
   }
 
@@ -65,10 +73,18 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != dateOfRegistration) {
+    if (picked != null &&
+        picked != dateOfRegistration &&
+        picked.difference(DateTime.now()) <= Duration.zero) {
       setState(() {
         dateOfRegistration = picked;
       });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Date of registration cannot be in future",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+        backgroundColor: Color.fromARGB(141, 235, 80, 80),
+      ));
     }
   }
 
@@ -146,6 +162,9 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
   }
 
   Future<void> _goToParts(String id) async {
+    if (id == null) {
+      return;
+    }
     if (mounted) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => PartPage(projectId: id),
@@ -356,21 +375,38 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
                                 DataColumn(label: Text('Edit')),
                               ],
                               rows: projects.map((project) {
-                                return DataRow(cells: [
-                                  DataCell(Text(project.typeOfPolicy)),
-                                  DataCell(Text(
-                                      '${project.dateOfRegistration.day}/${project.dateOfRegistration.month}/${project.dateOfRegistration.year}')),
-                                  DataCell(Text(
-                                      '${project.dateOfAccident.day}/${project.dateOfAccident.month}/${project.dateOfAccident.year}')),
-                                  DataCell(Text(project.vehicleId.toString())),
-                                  DataCell(IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () {
-                                      _editProject(project.id as String);
+                                return DataRow(
+                                    onLongPress: () {
+                                      _goToParts(project.id!);
                                     },
-                                  )),
-                                ]);
+                                    cells: [
+                                      DataCell(Text(project.typeOfPolicy)),
+                                      DataCell(Text(
+                                          '${project.dateOfRegistration.day}/${project.dateOfRegistration.month}/${project.dateOfRegistration.year}')),
+                                      DataCell(Text(
+                                          '${project.dateOfAccident.day}/${project.dateOfAccident.month}/${project.dateOfAccident.year}')),
+                                      DataCell(
+                                          Text(project.vehicleId.toString())),
+                                      DataCell(IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          _editProject(project.id as String);
+                                        },
+                                      )),
+                                    ]);
                               }).toList(),
+                              headingRowColor:
+                                  MaterialStateProperty.resolveWith<Color?>(
+                                      (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.hovered)) {
+                                  return Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(0.08);
+                                }
+                                return const Color.fromARGB(
+                                    255, 255, 0, 0); // Use the default value.
+                              }),
                             );
                           }
                         },
