@@ -113,7 +113,6 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
     final policy_type = policyTypeToNumberMap[selectedPolicy];
     final user = supabase.auth.currentUser;
     final updates = {
-      'id': projectId,
       'user_id': user!.id,
       'vehicle_id': vehicleId,
       'type_of_policy_id': policy_type,
@@ -121,6 +120,9 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
       'date_of_accident': selectedDate!.toIso8601String(),
       'title': title
     };
+    if (projectId != null) {
+      updates["id"] = projectId;
+    }
     if (dateOfRegistration!.difference(selectedDate!) > Duration.zero) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Date of registration should be before selected date",
