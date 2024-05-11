@@ -96,6 +96,7 @@ class _PartPageState extends State<PartPage> {
     };
     if (partId != null) {
       updates["id"] = partId;
+      partId = null;
     }
     if (partName == '' || qa < 1 || qe! < 1) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

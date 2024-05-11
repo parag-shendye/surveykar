@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
           title: const Center(
-        child: Text('Welcome to Surveykar'),
+        child: Text('Welcome to SurveyCar'),
       )),
       body: Column(
         children: [
