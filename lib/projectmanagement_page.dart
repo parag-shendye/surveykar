@@ -368,48 +368,56 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
                                 child: Text('Error: ${snapshot.error}'));
                           } else {
                             final List<Project> projects = snapshot.data!;
-                            return DataTable(
-                              columns: const [
-                                DataColumn(label: Text('Type of Policy')),
-                                DataColumn(label: Text('Date of Registration')),
-                                DataColumn(label: Text('Date of Accident')),
-                                DataColumn(label: Text('Vehicle ID')),
-                                DataColumn(label: Text('Edit')),
-                              ],
-                              rows: projects.map((project) {
-                                return DataRow(
-                                    onLongPress: () {
-                                      _goToParts(project.id!);
-                                    },
-                                    cells: [
-                                      DataCell(Text(project.typeOfPolicy)),
-                                      DataCell(Text(
-                                          '${project.dateOfRegistration.day}/${project.dateOfRegistration.month}/${project.dateOfRegistration.year}')),
-                                      DataCell(Text(
-                                          '${project.dateOfAccident.day}/${project.dateOfAccident.month}/${project.dateOfAccident.year}')),
-                                      DataCell(
-                                          Text(project.vehicleId.toString())),
-                                      DataCell(IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          _editProject(project.id as String);
+                            return Wrap(children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(label: Text('Type of Policy')),
+                                    DataColumn(
+                                        label: Text('Date of Registration')),
+                                    DataColumn(label: Text('Date of Accident')),
+                                    DataColumn(label: Text('Vehicle ID')),
+                                    DataColumn(label: Text('Edit')),
+                                  ],
+                                  rows: projects.map((project) {
+                                    return DataRow(
+                                        onLongPress: () {
+                                          _goToParts(project.id!);
                                         },
-                                      )),
-                                    ]);
-                              }).toList(),
-                              headingRowColor:
-                                  MaterialStateProperty.resolveWith<Color?>(
-                                      (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.hovered)) {
-                                  return Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(0.08);
-                                }
-                                return const Color.fromARGB(
-                                    255, 255, 0, 0); // Use the default value.
-                              }),
-                            );
+                                        cells: [
+                                          DataCell(Text(project.typeOfPolicy)),
+                                          DataCell(Text(
+                                              '${project.dateOfRegistration.day}/${project.dateOfRegistration.month}/${project.dateOfRegistration.year}')),
+                                          DataCell(Text(
+                                              '${project.dateOfAccident.day}/${project.dateOfAccident.month}/${project.dateOfAccident.year}')),
+                                          DataCell(Text(
+                                              project.vehicleId.toString())),
+                                          DataCell(IconButton(
+                                            icon: const Icon(Icons.edit),
+                                            onPressed: () {
+                                              _editProject(
+                                                  project.id as String);
+                                            },
+                                          )),
+                                        ]);
+                                  }).toList(),
+                                  headingRowColor:
+                                      MaterialStateProperty.resolveWith<Color?>(
+                                          (Set<MaterialState> states) {
+                                    if (states
+                                        .contains(MaterialState.hovered)) {
+                                      return Theme.of(context)
+                                          .colorScheme
+                                          .primary
+                                          .withOpacity(0.08);
+                                    }
+                                    return const Color.fromARGB(255, 255, 0,
+                                        0); // Use the default value.
+                                  }),
+                                ),
+                              )
+                            ]);
                           }
                         },
                       ),

@@ -466,58 +466,76 @@ class _PartPageState extends State<PartPage> {
                               if (parts == null || parts.isEmpty) {
                                 return const Text("Data Not Available");
                               } else {
-                                return DataTable(
-                                    columns: const [
-                                      DataColumn(label: Text('Part Name')),
-                                      DataColumn(label: Text('Quantity Ava.')),
-                                      DataColumn(label: Text('Quantity Exp.')),
-                                      DataColumn(label: Text('Comment')),
-                                      DataColumn(label: Text('Material')),
-                                      DataColumn(label: Text('Unit Price')),
-                                      DataColumn(label: Text('Total Cost')),
-                                      DataColumn(label: Text('Edit')),
-                                      DataColumn(label: Text('Delete')),
-                                    ],
-                                    rows: parts.map((part) {
-                                      print(part);
-                                      return DataRow(cells: [
-                                        DataCell(Text(part.name)),
-                                        DataCell(Text('${part.qa}')),
-                                        DataCell(Text('${part.qe}')),
-                                        DataCell(Text(part.comment ?? '')),
-                                        DataCell(Text(part.material)),
-                                        DataCell(Text('${part.unitPrice}')),
-                                        DataCell(Text('${part.totalCost}')),
-                                        DataCell(IconButton(
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {
-                                            _editPart(part.id!);
-                                          },
-                                        )),
-                                        DataCell(IconButton(
-                                          icon: Icon(
-                                            Icons.delete,
-                                            color: Colors.red.shade700,
-                                          ),
-                                          onPressed: () {
-                                            _deletePart(part.id!);
-                                          },
-                                        )),
-                                      ]);
-                                    }).toList(),
-                                    headingRowColor: MaterialStateProperty
-                                        .resolveWith<Color?>(
-                                            (Set<MaterialState> states) {
-                                      if (states
-                                          .contains(MaterialState.hovered)) {
-                                        return Theme.of(context)
-                                            .colorScheme
-                                            .primary
-                                            .withOpacity(0.08);
-                                      }
-                                      return const Color.fromARGB(255, 255, 0,
-                                          0); // Use the default value.
-                                    }));
+                                return Wrap(
+                                  children: [
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: DataTable(
+                                          columns: const [
+                                            DataColumn(
+                                                label: Text('Part Name')),
+                                            DataColumn(
+                                                label: Text('Quantity Ava.')),
+                                            DataColumn(
+                                                label: Text('Quantity Exp.')),
+                                            DataColumn(label: Text('Comment')),
+                                            DataColumn(label: Text('Material')),
+                                            DataColumn(
+                                                label: Text('Unit Price')),
+                                            DataColumn(
+                                                label: Text('Total Cost')),
+                                            DataColumn(label: Text('Edit')),
+                                            DataColumn(label: Text('Delete')),
+                                          ],
+                                          rows: parts.map((part) {
+                                            print(part);
+                                            return DataRow(cells: [
+                                              DataCell(Text(part.name)),
+                                              DataCell(Text('${part.qa}')),
+                                              DataCell(Text('${part.qe}')),
+                                              DataCell(
+                                                  Text(part.comment ?? '')),
+                                              DataCell(Text(part.material)),
+                                              DataCell(
+                                                  Text('${part.unitPrice}')),
+                                              DataCell(
+                                                  Text('${part.totalCost}')),
+                                              DataCell(IconButton(
+                                                icon: const Icon(Icons.edit),
+                                                onPressed: () {
+                                                  _editPart(part.id!);
+                                                },
+                                              )),
+                                              DataCell(IconButton(
+                                                icon: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.red.shade700,
+                                                ),
+                                                onPressed: () {
+                                                  _deletePart(part.id!);
+                                                },
+                                              )),
+                                            ]);
+                                          }).toList(),
+                                          headingRowColor: MaterialStateProperty
+                                              .resolveWith<Color?>(
+                                                  (Set<MaterialState> states) {
+                                            if (states.contains(
+                                                MaterialState.hovered)) {
+                                              return Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                                  .withOpacity(0.08);
+                                            }
+                                            return const Color.fromARGB(
+                                                255,
+                                                255,
+                                                0,
+                                                0); // Use the default value.
+                                          })),
+                                    )
+                                  ],
+                                );
                               }
                             }
                           },
