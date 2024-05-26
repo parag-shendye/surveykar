@@ -143,7 +143,10 @@ class _LoginPageState extends State<LoginPage> {
                 child: const Text('Signup'),
               )
             ],
-          ))
+          )),
+          Container(
+            child: Text('©2024 Parag Shendye. All rights reserved'),
+          )
         ],
       ),
     );

@@ -403,10 +403,9 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
                                         ]);
                                   }).toList(),
                                   headingRowColor:
-                                      MaterialStateProperty.resolveWith<Color?>(
-                                          (Set<MaterialState> states) {
-                                    if (states
-                                        .contains(MaterialState.hovered)) {
+                                      WidgetStateProperty.resolveWith<Color?>(
+                                          (Set<WidgetState> states) {
+                                    if (states.contains(WidgetState.hovered)) {
                                       return Theme.of(context)
                                           .colorScheme
                                           .primary
@@ -427,6 +426,9 @@ class _ProjectManagementPageState extends State<ProjectManagementPage> {
               ),
             ),
           ),
+          Container(
+            child: Text('©2024 Parag Shendye. All rights reserved'),
+          )
         ],
       ),
     );

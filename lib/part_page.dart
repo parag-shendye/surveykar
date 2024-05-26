@@ -12,6 +12,7 @@ class Part {
   final int qa;
   final int qe;
   final double unitPrice;
+  final String gst;
   final String material;
   final String? comment;
   final double? totalCost;
@@ -22,6 +23,7 @@ class Part {
     this.qa = 1,
     this.qe = 1,
     required this.unitPrice,
+    required this.gst,
     required this.material,
     this.comment,
     this.totalCost,
@@ -33,6 +35,7 @@ class Part {
       'qa': qa,
       'qe': qe,
       'unit_price': unitPrice,
+      'gst': gst,
       'material': material,
       'comment': comment,
       'total_cost': totalCost,
@@ -54,6 +57,7 @@ class _PartPageState extends State<PartPage> {
   bool _loading = false;
   bool found = false;
   String? material;
+  String? gst;
   String? partId;
   double? amount;
   double? payableAmount;
@@ -66,6 +70,7 @@ class _PartPageState extends State<PartPage> {
   TextEditingController qaController = TextEditingController();
   TextEditingController qeController = TextEditingController();
   TextEditingController materialController = TextEditingController();
+  TextEditingController gstController = TextEditingController();
   TextEditingController commentController = TextEditingController();
 
   Future<void> _updatePart(BuildContext context) async {
@@ -90,6 +95,7 @@ class _PartPageState extends State<PartPage> {
       'qa': qa,
       'qe': qe,
       'unit_price': unitPrice,
+      'gst  ': gstTypeToNumberMap[gst],
       'total_cost': unitPrice! * qa!,
       'material_id': materialTypeToNumberMap[material],
       'project_id': projectId
@@ -151,6 +157,7 @@ class _PartPageState extends State<PartPage> {
     setState(() {
       material =
           getKeyFromValue(materialTypeToNumberMap, selectedPart['material_id']);
+      gst = getKeyFromValue(gstTypeToNumberMap, selectedPart['gst_id']);
     });
   }
 
@@ -216,6 +223,7 @@ class _PartPageState extends State<PartPage> {
                   materialTypeToNumberMap, row['material_id'] as int) ??
               'None',
           unitPrice: row['unit_price'].toDouble(),
+          gst: getKeyFromValue(gstTypeToNumberMap, row['gst'] as int) ?? 'None',
           totalCost: row['total_cost'].toDouble());
       parts.add(part);
       setState(() {
@@ -392,6 +400,32 @@ class _PartPageState extends State<PartPage> {
                         ),
                       ],
                     ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                value: '0',
+                                decoration:
+                                    const InputDecoration(labelText: 'GST'),
+                                items: ['0', '5', '10', '12', '18', '28']
+                                    .map((gst) => DropdownMenuItem<String>(
+                                          value: gst,
+                                          child: Text(gst + '%'),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    gst = '0';
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                     TextFormField(
                       controller: commentController,
                       decoration: const InputDecoration(labelText: 'Comment'),
@@ -412,6 +446,7 @@ class _PartPageState extends State<PartPage> {
                                 unitPriceController.text.isNotEmpty &&
                                 totalCostController.text.isNotEmpty &&
                                 nameController.text.isNotEmpty &&
+                                gst != null &&
                                 material != null) {
                               _updatePart(context);
                               qaController.clear();
@@ -421,7 +456,9 @@ class _PartPageState extends State<PartPage> {
                               nameController.clear();
                               commentController.clear();
                               materialController.clear();
+                              gstController.clear();
                               material = null;
+                              gst = null;
                             } else {
                               // Show error message or handle invalid input
                             }
@@ -482,6 +519,7 @@ class _PartPageState extends State<PartPage> {
                                             DataColumn(label: Text('Material')),
                                             DataColumn(
                                                 label: Text('Unit Price')),
+                                            DataColumn(label: Text('GST')),
                                             DataColumn(
                                                 label: Text('Total Cost')),
                                             DataColumn(label: Text('Edit')),
@@ -498,6 +536,7 @@ class _PartPageState extends State<PartPage> {
                                               DataCell(Text(part.material)),
                                               DataCell(
                                                   Text('${part.unitPrice}')),
+                                              DataCell(Text('${part.gst}')),
                                               DataCell(
                                                   Text('${part.totalCost}')),
                                               DataCell(IconButton(
@@ -517,11 +556,11 @@ class _PartPageState extends State<PartPage> {
                                               )),
                                             ]);
                                           }).toList(),
-                                          headingRowColor: MaterialStateProperty
+                                          headingRowColor: WidgetStateProperty
                                               .resolveWith<Color?>(
-                                                  (Set<MaterialState> states) {
+                                                  (Set<WidgetState> states) {
                                             if (states.contains(
-                                                MaterialState.hovered)) {
+                                                WidgetState.hovered)) {
                                               return Theme.of(context)
                                                   .colorScheme
                                                   .primary
@@ -556,6 +595,9 @@ class _PartPageState extends State<PartPage> {
               ],
             ),
           )),
+          Container(
+            child: Text('©2024 Parag Shendye. All rights reserved'),
+          )
         ],
       ),
     );
